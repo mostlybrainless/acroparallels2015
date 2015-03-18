@@ -5,7 +5,7 @@
 #include<time.h>
 #include<pthread.h>
 
-/* Global variables */
+/* Global variables  */
 
 /* Mutex (mutual exclusion) lock for critical operations*/
 pthread_mutex_t log_mutex = PTHREAD_MUTEX_INITIALIZER;
