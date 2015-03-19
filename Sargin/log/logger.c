@@ -1,22 +1,15 @@
 //
-//  log.c
+//  logger.c
+//  log
 //
-//
-//  Created by Daniil Sargin on 17/03/15.
+//  Created by Daniil Sargin on 18/03/15.
 //  Copyright (c) 2015 Даниил Саргин. All rights reserved.
 //
 
 #include <stdio.h>
+#include "logger.h"
 #include <stdarg.h>
 #include <sys/time.h>
-#include <unistd.h>
-
-struct log_context
-{
-    FILE *fp;
-    int prior;
-    int flOpen;
-};
 
 struct log_context initlog(int prior, const char* flname, const char* mode)
 {
@@ -40,7 +33,7 @@ int nlog(int prior, struct log_context* logc, const char *fmt, ...)
         return 0;
     }
     if (prior > logc->prior) {
-        return 1;
+        return 0;
     }
     
     time_t t = time(NULL);
@@ -60,15 +53,4 @@ int nlog(int prior, struct log_context* logc, const char *fmt, ...)
     fflush(logc->fp);
     va_end(list);
     return done;
-}
-
-int main(int argc, const char * argv[]) {
-    struct log_context logc = initlog(2, "log.txt", "w");
-
-    nlog(3, &logc, "logged %d and %.1f and %d", 5, 0.5, 5);
-    sleep(1);
-    nlog(2, &logc, "logged %d and %.1f and %d", 5, 0.5, 5);
-    
-    deinitlog(&logc);
-    return 0;
 }
