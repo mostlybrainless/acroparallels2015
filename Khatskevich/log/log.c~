@@ -1,5 +1,4 @@
-// The same as log/log.c with only one difference. It uses separate process writer against pthread.
-// It is better ( I think ) in case of main program crushing.
+// The same as log/logProc.c with only one difference. It uses pthread writer against separate process.
 
 #include <stdio.h>
 #include <sys/types.h>
@@ -10,9 +9,9 @@
 #include <pthread.h>
 #include <sys/ioctl.h>
 #include <sys/time.h>
-#include <stdlib.h>
 
 #include "log.h"
+
 
 typedef struct
 {
@@ -26,18 +25,16 @@ typedef struct
     struct timeval startTime;
 } LOGMAININFO;
 
-LOGMAININFO logMainInfo = {.isStarted = 0};
-int writerProcId;
+static LOGMAININFO logMainInfo = {.isStarted = 0};
 
 void * threadWriter( void* param);
-
 
 int logInit(unsigned logLevel, unsigned flags, const char * filename){
     int des;
     int rc;
     int pipefd[2];// I am using pipe as circular buffer. It is thread safe.
-    // let us guess that it is can be started in only one thread immediately.
-    if ( logMainInfo.isStarted == 1){ 
+    
+    if ( logMainInfo.isStarted == 1){ // let us guess that it is can be started in only one thread.
             goto log_exit_0;
     }
     
@@ -58,7 +55,10 @@ int logInit(unsigned logLevel, unsigned flags, const char * filename){
     if ( rc == -1 ){
         goto log_exit_1;
     }
-
+    rc = pthread_create(&logMainInfo.writerThreadId, NULL, &threadWriter, NULL);
+    if ( rc !=0 ){
+        goto log_exit_2;
+    }
     logMainInfo.flags = flags;
     logMainInfo.readBufDes = pipefd[0] ; 
     logMainInfo.writeBufDes = pipefd[1] ;
@@ -66,19 +66,7 @@ int logInit(unsigned logLevel, unsigned flags, const char * filename){
     logMainInfo.logDes = des ; 
     logMainInfo.isStarted = 1;
     gettimeofday(&logMainInfo.startTime,0);
-    
-    rc = fork();
-    if ( rc == 0 ){ //child
-        close(logMainInfo.writeBufDes);
-        threadWriter( NULL);
-    }else if ( rc > 0){ // parent
-        writerProcId = rc;
-        close(logMainInfo.readBufDes);
-    }else{
-        close( pipefd[1]);
-        goto log_exit_1;
-    }
-    logMesg("log.c", __LINE__ , "LOG", LOG_INFO, "Log started successfully."); 
+    logMesg("log.c", __LINE__ , "LOG", LOG_INFO, "Log started successfully");  
     return 0;
 
     log_exit_2:
@@ -91,15 +79,14 @@ int logInit(unsigned logLevel, unsigned flags, const char * filename){
 }   
 
 int logClose(){
-    int rc;
     if ( logMainInfo.isStarted == 0){
         return -1;
     }
     logMainInfo.isStarted = 0;
     close( logMainInfo.writeBufDes );
-    waitpid( writerProcId , &rc , 0 );
+    pthread_join(logMainInfo.writerThreadId, NULL);
     close( logMainInfo.readBufDes );
-    close( logMainInfo.logDes);
+    close( logMainInfo.logDes );
     if( logMainInfo.logDes != 2){ //stderr
         close( logMainInfo.logDes );
     }
@@ -115,9 +102,7 @@ void * threadWriter( void* param){
         writtenlen = write( logMainInfo.logDes, buf, len );
         if( writtenlen != len );
     }
-    close( logMainInfo.readBufDes);
-    close( logMainInfo.logDes);
-    exit(0);
+    return 0;
 }
 
 float timedifference_msec(struct timeval t0, struct timeval t1)
@@ -139,6 +124,7 @@ int logMesg( const char *fname, int lineno ,char* group, int priority ,const cha
     ssize_t len;
     va_list argptr;
     va_start(argptr, str);
+    //len_preamb = snprintf( buf, MAX_MESG_SIZE-1, "%s:", group); 
     if ( logMainInfo.flags & LOG_PRINT_TIME ){
         struct timeval t1;
         float elapsed;
@@ -165,5 +151,4 @@ int logMesg( const char *fname, int lineno ,char* group, int priority ,const cha
     if ( len != len_preamb + len_mesg + 1 );
     return len+1;
 }
-
 
