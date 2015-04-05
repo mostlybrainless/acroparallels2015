@@ -14,24 +14,24 @@ void setLogLevel(int newlevel){
     level = newlevel;
 }
 
-void ERROR(FILE* mysource, char errorMessage[]){
-    fprintf(mysource, "ERROR: ");
-    fprintf(mysource, errorMessage);
-    fprintf(mysource, "\n");
+void ERROR(FILE* mysource, string errorMessage){
+    fputs("ERROR: ", mysource);
+    fputs(errorMessage.c_str(), mysource);
+    fputs("\n", mysource);
 }
 
-void WARNING(FILE* mysource, char myError[]){
+void WARNING(FILE* mysource, string myError){
     if (level >= RSDEBUG){
-        fprintf(mysource, "WARNING: ");
-        fprintf(mysource, myError);
-        fprintf(mysource, "\n");
+        fputs( "WARNING: ", mysource);
+        fputs( myError.c_str(), mysource);
+        fputs("\n", mysource);
     }
 }
 
-void INFO(FILE* mysource, char myError[]){
+void INFO(FILE* mysource, string myError){
     if (level >= RSALL){
-        fprintf(mysource, "INFO: ");
-        fprintf(mysource, myError);
-        fprintf(mysource, "\n");
+        fputs( "INFO: ", mysource);
+        fputs(myError.c_str(), mysource);
+        fputs( "\n", mysource);
     }
 }

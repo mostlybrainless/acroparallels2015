@@ -15,6 +15,7 @@
  WARNING(fp, "something went wrong");
  ERROR(stderr, "TERRIBLE ERROR");
  */
+#pragma once
 
 #ifndef __myLogger__RSLogger__
 #define __myLogger__RSLogger__
@@ -27,7 +28,7 @@ using namespace std;
 
 #endif /* defined(__myLogger__RSLogger__) */
 
-enum logLevel{
+enum RSlogLevel{
     RSRELEASE,
     RSDEBUG,
     RSALL
@@ -35,6 +36,6 @@ enum logLevel{
 
 
 void setLogLevel(int level);
-void ERROR(FILE* mysource, char myError[]);
-void WARNING(FILE* mysource, char myError[]);
-void INFO(FILE* mysource, char myError[]);
+void ERROR(FILE* mysource, string myError);
+void WARNING(FILE* mysource, string myError);
+void INFO(FILE* mysource, string myError);
