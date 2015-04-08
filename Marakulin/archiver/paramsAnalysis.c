@@ -6,6 +6,7 @@
 #define PACK "-pack"
 #define UNPACK "-unpack"
 #define GET_EXAMPLE "-getExample"
+#define CHECK_ARCH "-check"
 
 #define GET_EXAMPLE_STRINGS() \
 do { \
@@ -36,6 +37,10 @@ int analyzeParams(int argc, char* argv[])
         else if (!strcmp(GET_EXAMPLE, argv[1]))
         {
             return getExample(argc-1, argv+1);
+        }
+        else if (!strcmp(CHECK_ARCH, argv[1]))
+        {
+            return checkArch(argc-1, argv+1);
         }
         else
         {
@@ -81,12 +86,17 @@ int pack(int argc, char* argv[])
     else
     {
         LOG(TRACE, "argv[2] = '%s'", argv[2]);
+        if ((strstr(argv[2], ".arc") != (argv[2] + strlen(argv[2])-4)) || (strlen(argv[1]) < 5))
+        {
+            printf("wrong name of destination file\n");
+            return -1;
+        }
         if (access(argv[2], F_OK) != -1)
         {
             printf("destination file exists\n");
             return -1;
         }
-        fdOut = open(argv[2], O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
+        fdOut = open(argv[2], O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
     }
     if (fdOut == -1)
     {
@@ -170,5 +180,42 @@ int getExample(int argc, char* argv[])
 {
     LOG(TRACE, "argc = %d", argc);
     GET_EXAMPLE_STRINGS();
+    return 0;
+}
+
+int checkArch(int argc, char* argv[])
+{
+    LOG(TRACE, "argc = %d", argc);
+    if (argc != 2)
+    {
+        printf("wrong input, check number of params\n");
+        return -1;
+    }
+    if ((strstr(argv[1], ".arc") != (argv[1] + strlen(argv[1])-4)) || (strlen(argv[1]) < 5))
+    {
+        printf("wrong name of source file\n");
+        return -1;
+    }
+    int fd = open(argv[1], O_RDONLY);
+    if (fd == -1)
+    {
+        printf("error opening source file\n");
+        return -1;
+    }
+    struct stat statFile;
+    fstat(fd, &statFile);
+    const Bytef* addr = (const Bytef*)mmap(NULL, statFile.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
+    PrefixOfFile pF;
+    memcpy(&pF, addr, sizeof(PrefixOfFile));
+    if (pF.hash != getHashSum(fd))
+    {
+        printf("archive is corrupt\n");
+        return 0;
+    }
+    else
+    {
+        printf("complete archive\n");
+        return 0;
+    }
     return 0;
 }

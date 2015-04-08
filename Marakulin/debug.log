@@ -1,7 +1,2 @@
-2015-04-08 03:21:26 'argc = 4' analyzeParams() (./archiver/paramsAnalysis.c:19)
-2015-04-08 03:21:26 'argc = 3' pack() (./archiver/paramsAnalysis.c:52)
-2015-04-08 03:21:26 'argv[1] = './tests/files_for_tests/2'' pack() (./archiver/paramsAnalysis.c:59)
-2015-04-08 03:21:26 'argv[2] = './tests/packed_files/2.arc'' pack() (./archiver/paramsAnalysis.c:83)
-2015-04-08 03:21:26 'hash = 0
-' compressFile() (./archiver/compressFile.c:55)
-2015-04-08 03:21:26 'pF.st_mode = 33204, pF.st_size = 134355' compressFile() (./archiver/compressFile.c:58)
+2015-04-08 15:15:10 'argc = 3' analyzeParams() (./archiver/paramsAnalysis.c:20)
+2015-04-08 15:15:10 'argc = 2' checkArch() (./archiver/paramsAnalysis.c:188)

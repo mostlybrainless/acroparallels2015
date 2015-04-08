@@ -51,8 +51,8 @@ int compressFile(int fdIn, int fdOut)
         write(fdOut, outAddr, destLen+sizeof(off_t));
         restToCompress -= BLOCK_SIZE;
     }
-    //pF.hash = getHashSum(fdOut);
-    LOG(TRACE, "hash = %d\n", pF.hash);
+    pF.hash = getHashSum(fdOut);
+    LOG(TRACE, "hash = %d", pF.hash);
     lseek(fdOut, 0L, 0);
     write(fdOut, &pF, sizeof(PrefixOfFile));
     LOG(TRACE, "pF.st_mode = %d, pF.st_size = %d", pF.st_mode, pF.st_size);
@@ -71,6 +71,11 @@ int uncompressFile(int fdIn, char* outFile)
     off_t prevOffsetNextBlock = 0;
     const Bytef* addr = (const Bytef*)mmap(NULL, inStat.st_size, PROT_READ, MAP_PRIVATE, fdIn, 0);
     memcpy(&pF, addr, sizeof(PrefixOfFile));
+    if (pF.hash != getHashSum(fdIn))
+    {
+        printf("Don't lie me, it isn't .arc file!\n");
+        return -1;
+    }
     LOG(TRACE, "pF.st_mode = %d, pF.st_size = %d", pF.st_mode, pF.st_size);
     int fdOut = open(outFile, O_CREAT | O_WRONLY, pF.st_mode);
     if (fdOut == -1)

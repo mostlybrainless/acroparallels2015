@@ -14,5 +14,6 @@ int analyzeParams(int argc, char* argv[]);
 int pack(int argc, char* argv[]);
 int unpack(int argc, char* argv[]);
 int getExample(int argc, char* argv[]);
+int checkArch(int argc, char* argv[]);
 
 #endif //__PARAMS_ANALYSIS__
