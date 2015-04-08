@@ -26,8 +26,8 @@ typedef struct
     struct timeval startTime;
 } LOGMAININFO;
 
-static LOGMAININFO logMainInfo = {.isStarted = 0};
-static int writerProcId;
+LOGMAININFO logMainInfo = {.isStarted = 0};
+int writerProcId;
 
 void * threadWriter( void* param);
 

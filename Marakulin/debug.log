@@ -1,0 +1,2 @@
+2015-04-08 15:15:10 'argc = 3' analyzeParams() (./archiver/paramsAnalysis.c:20)
+2015-04-08 15:15:10 'argc = 2' checkArch() (./archiver/paramsAnalysis.c:188)

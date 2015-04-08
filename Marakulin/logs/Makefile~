@@ -1,0 +1,8 @@
+LIBPATH=../archiver/libs/libLogs.so
+libLogs.so: logs.o
+	gcc -shared -o libLogs.so logs.o
+	@if [ -f $(LIBPATH) ]; then rm $(LIBPATH) ln; else ln libLogs.so $(LIBPATH); fi
+logs.o: logs.c
+	gcc -c -fPIC logs.c
+clean:
+	rm -f *.o

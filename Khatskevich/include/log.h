@@ -16,7 +16,7 @@
 #ifdef DEBUG
 #define LOGMESG(a, ...) logMesg( __FILE__, __LINE__, LOG_GROUP, a, ##__VA_ARGS__ )
 #else
-#define LOGMESG(a) do{}while(0)
+#define LOGMESG(a, ...) do{}while(0)
 #endif //DEBUG
 
 #include <pthread.h>
