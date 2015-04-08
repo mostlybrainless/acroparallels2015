@@ -1,0 +1,10 @@
+#include "main.h"
+
+int main(int argc, char* argv[])
+{
+    LOG_CREATE(DEBUG, "./debug.log");
+    analyzeParams(argc, argv);
+    LOG(INFO, "first warning");
+    LOG_RELEASE();
+    return 0;
+}
