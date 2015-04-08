@@ -14,6 +14,9 @@ static char* PREFIX_FOR_out_f_name = "-of";
 static char* PREFIX_FOR_decompress = "-d";
 
 void printHelp(){
+            printf("archivator usage:\n");
+            printf("Compression:    archivator [options] -of ofname file1/folder1 [files/folders] \t ( options and files can be on any place )\n");
+            printf("Decompression:  archivator [-of out_folder_name] archievename \n");
             printf("For control processes number, use prefixes:\n\tnumber of scaners %s\n\tnumber of compressors %s\n\tset borth of previous %s\n", 
                    PREFIX_FOR_number_of_scaners ,PREFIX_FOR_number_of_workers,PREFIX_FOR_number_of_processes);
             printf("To set compression lvl, use prefix: %s    (default = 3)\n", 
