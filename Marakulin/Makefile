@@ -10,6 +10,8 @@ all: arch
 
 arch: main.o paramsAnalysis.o compressFile.o hashFunc.o
 	cd ./logs && make
+	cd ./zlib-1.2.8 && make
+	cd ./zlib-1.2.8 && make makeLink
 	$(CC) -I$(INCPATH) -L$(LIBPATH) -Wl,-R$(LIBPATH) main.o paramsAnalysis.o compressFile.o hashFunc.o -o arch -lLogs -lz
 
 main.o: ./archiver/main.c
