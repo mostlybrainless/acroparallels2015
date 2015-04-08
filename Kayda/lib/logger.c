@@ -54,7 +54,7 @@ void *logWrite()
  * Lock-free message passing to ring buffer.
  * Use spinlocks for small waits.
  */
-void logInternal(unsigned level, char *msg, char *file, int line, const char *func, ...)
+void logInternal(char *file, int line, const char *func, unsigned level, char *msg, ...)
 {
 	if (!logfile){
 		fprintf(stderr, "Log system need init\n");
@@ -62,7 +62,7 @@ void logInternal(unsigned level, char *msg, char *file, int line, const char *fu
 	}
 	if (level <= loglvl){
 		va_list ap;
-		va_start(ap, func);
+		va_start(ap, msg);
 		struct timeval curtime;
 
 		/* atomic for get place in queue */

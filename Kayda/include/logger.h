@@ -3,11 +3,11 @@
 #ifndef LOGGER_H
 #define LOGGER_H
 
-#define Log(a, b, ...) logInternal(a, b, __FILE__, __LINE__, __func__, __VA_ARGS__)
+#define Log(log_lvl, ...) logInternal(__FILE__, __LINE__, __func__, log_lvl, __VA_ARGS__)
 
 int initLog(unsigned const logLevel, char *logName);
 int exitLog();
-void logInternal(unsigned level, char *msg, char *file, int line, const char *func, ...);
+void logInternal(char *file, int line, const char *func, unsigned level, char *msg, ...);
 
 typedef enum  {
 	LOG_ERROR,
