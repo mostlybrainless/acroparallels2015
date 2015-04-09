@@ -1,0 +1,7 @@
+make to compile, zlib must be installed
+
+to compress:
+./archiver compress [file name]
+
+to decompress:
+./archiver decompress [archived file]

@@ -7,26 +7,26 @@
 //
 
 #include <stdio.h>
-#include "logger.h"
+#include "../include/logger.h"
 #include <stdarg.h>
 #include <sys/time.h>
 
-struct log_context initlog(int prior, const char* flname, const char* mode)
+log_context initlog(LOG_LEVEL prior, const char * flname, const char* mode)
 {
-    struct log_context result;
+    log_context result;
     result.prior = prior;
     result.fp = fopen(flname, mode);
     result.flOpen = 1;
     return result;
 }
 
-void deinitlog(struct log_context* logC)
+void deinitlog(log_context * logC)
 {
     fclose(logC->fp);
     logC->flOpen = 0;
 }
 
-int nlog(int prior, struct log_context* logc, const char *fmt, ...)
+int nlog(LOG_LEVEL prior, log_context * logc, const char *fmt, ...)
 {
     if (logc->flOpen == 0) {
         printf("nlog: no file opened \n");
