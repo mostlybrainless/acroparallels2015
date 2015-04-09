@@ -32,6 +32,15 @@ Node::Node(Node *leftNode = nullptr, Node *rightNode = nullptr, node_t type = NO
 	right = rightNode;
 }
 
+
+Node::~Node() {
+	/*
+	delete left;
+	delete right;
+	*/
+}
+
+
 size_t Node::getFrequency() {
 	return frequency;
 }

@@ -19,5 +19,6 @@ int main() {
 	huffmanCompress.encode();
 
 	Decompress decompress = Decompress(huffmanCompress.getOutDataBitset());
+	decompress.decode();
 	return 0;
 }

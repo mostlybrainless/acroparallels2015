@@ -14,11 +14,13 @@ private:
 	std::string *outData;
 //
 //
+	void readHuffmanTableSize();	// from inputData
+	void readHuffmanTable();
 
 public:
 	Decompress(boost::dynamic_bitset<>* input);
-//	Node* createHuffmanTree();
-//	void decode();
+	Node* createHuffmanTree();
+	void decode();
 //
 //
 };
