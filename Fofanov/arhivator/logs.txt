@@ -1,0 +1,4 @@
+2015/04/09 16:07:16 --- Info about file test_file.mgz was gotten success.
+2015/04/09 16:07:16 --- File test_file.mgz was mapped success.
+2015/04/09 16:07:16 --- Data compress was made success.
+2015/04/09 16:07:16 --- File test_file was decompressed with result: success
